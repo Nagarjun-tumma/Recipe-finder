@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RecipeHub - Discover Amazing Recipes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #ff6b6b;
+        --primary-light: #ff8e8e;
+        --primary-dark: #e55555;
+        --secondary: #4ecdc4;
+        --accent: #ffe66d;
+        --dark: #2c3e50;
+        --light: #ffffff;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-800: #1e293b;
+        --gray-900: #0f172a;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        line-height: 1.6;
+        background: linear-gradient(
+          135deg,
+          var(--gray-50) 0%,
+          var(--gray-100) 100%
+        );
+        color: var(--gray-800);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Navigation Header */
+      .navbar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--gray-200);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        transition: all 0.3s ease;
+      }
+
+      .navbar.scrolled {
+        box-shadow: var(--shadow-lg);
+        background: rgba(255, 255, 255, 0.98);
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 70px;
+      }
+
+      .nav-logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-logo::before {
+        content: "🍽️";
+        font-size: 1.5rem;
+      }
+
+      .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: var(--gray-700);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-link:hover {
+        color: var(--primary);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      .nav-cta {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: var(--light);
+        padding: 0.5rem 1.5rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .nav-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--gray-700);
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 50%,
+          var(--secondary) 100%
+        );
+        padding: 4rem 0 3rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .hero-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        padding: 0 1rem;
+      }
+
+      .hero-title {
+        font-family: "Playfair Display", serif;
+        font-size: 4rem;
+        font-weight: 700;
+        color: var(--light);
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        line-height: 1.1;
+      }
+
+      .hero-subtitle {
+        font-size: 1.3rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 2rem;
+        font-weight: 300;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-cta {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+      }
+
+      .find-recipe-btn {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: var(--light);
+        padding: 1rem 2.5rem;
+        border-radius: 3rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .find-recipe-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.6s ease;
+      }
+
+      .find-recipe-btn:hover::before {
+        left: 100%;
+      }
+
+      .find-recipe-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .explore-btn {
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        color: var(--light);
+        padding: 1rem 2rem;
+        border-radius: 3rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
+
+      .explore-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.6);
+        transform: translateY(-2px);
+      }
+
+      .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-top: 3rem;
+        flex-wrap: wrap;
+      }
+
+      .stat-item {
+        text-align: center;
+        color: var(--light);
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Features Section */
+      .features {
+        padding: 5rem 0;
+        background: var(--light);
+      }
+
+      .features-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      .features-header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      .features-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 1rem;
+      }
+
+      .features-subtitle {
+        font-size: 1.1rem;
+        color: var(--gray-600);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .feature-card {
+        background: var(--gray-50);
+        padding: 2rem;
+        border-radius: 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid var(--gray-200);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .feature-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin-bottom: 1rem;
+      }
+
+      .feature-description {
+        color: var(--gray-600);
+        line-height: 1.6;
+      }
+
+      /* Search Section */
+      .search-section {
+        padding: 3rem 0;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        flex: 1;
+      }
+
+      .search-container {
+        background: var(--light);
+        border-radius: 2rem;
+        padding: 2rem;
+        box-shadow: var(--shadow-xl);
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .search-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--primary) 0%,
+          var(--secondary) 50%,
+          var(--accent) 100%
+        );
+      }
+
+      .search-form {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .search-input {
+        flex: 1;
+        min-width: 300px;
+        padding: 1rem 1.5rem;
+        border: 2px solid var(--gray-200);
+        border-radius: 1rem;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        background: var(--gray-50);
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: var(--light);
+        box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+      }
+
+      .search-btn {
+        padding: 1rem 2rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        border: none;
+        border-radius: 1rem;
+        color: var(--light);
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow);
+      }
+
+      .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .random-btn {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, var(--secondary) 0%, #3eb8b0 100%);
+        border: none;
+        border-radius: 0.75rem;
+        color: var(--light);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+      }
+
+      .random-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      /* Enhanced Footer */
+      .footer {
+        background: linear-gradient(
+          135deg,
+          var(--gray-900) 0%,
+          var(--dark) 100%
+        );
+        color: var(--light);
+        padding: 4rem 0 1rem;
+        margin-top: auto;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .footer::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--primary) 0%,
+          var(--secondary) 50%,
+          var(--accent) 100%
+        );
+      }
+
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 3rem;
+        margin-bottom: 3rem;
+      }
+
+      .footer-section h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--accent);
+        position: relative;
+      }
+
+      .footer-section h3::after {
+        content: "";
+        position: absolute;
+        bottom: -0.5rem;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background: var(--primary);
+      }
+
+      .footer-section p {
+        color: var(--gray-300);
+        line-height: 1.7;
+        margin-bottom: 1rem;
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-links li {
+        margin-bottom: 0.75rem;
+      }
+
+      .footer-links a {
+        color: var(--gray-300);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-links a:hover {
+        color: var(--accent);
+        transform: translateX(5px);
+      }
+
+      .footer-links a::before {
+        content: "→";
+        font-size: 0.8rem;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+      }
+
+      .footer-links a:hover::before {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .social-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(
+          135deg,
+          var(--gray-800) 0%,
+          var(--gray-700) 100%
+        );
+        border-radius: 50%;
+        color: var(--light);
+        text-decoration: none;
+        font-size: 1.3rem;
+        transition: all 0.3s ease;
+      }
+
+      .social-link:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        transform: translateY(-3px) scale(1.1);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .newsletter {
+        background: linear-gradient(
+          135deg,
+          var(--gray-800) 0%,
+          var(--dark) 100%
+        );
+        padding: 2rem;
+        border-radius: 1.5rem;
+        margin-top: 1rem;
+        border: 1px solid var(--gray-700);
+      }
+
+      .newsletter h4 {
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .newsletter p {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .newsletter-form {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .newsletter-input {
+        flex: 1;
+        padding: 0.75rem 1.25rem;
+        border: 2px solid var(--gray-600);
+        border-radius: 0.75rem;
+        background: var(--gray-700);
+        color: var(--light);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .newsletter-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: var(--gray-600);
+      }
+
+      .newsletter-input::placeholder {
+        color: var(--gray-400);
+      }
+
+      .newsletter-btn {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        border: none;
+        border-radius: 0.75rem;
+        color: var(--light);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .newsletter-btn:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark) 0%,
+          var(--primary) 100%
+        );
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .company-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .company-logo {
+        font-size: 2.5rem;
+      }
+
+      .company-details h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .company-details::after {
+        display: none;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid var(--gray-700);
+        padding-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .footer-bottom-left {
+        color: var(--gray-400);
+        font-size: 0.9rem;
+      }
+
+      .footer-bottom-right {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-bottom-right a {
+        color: var(--gray-400);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+      }
+
+      .footer-bottom-right a:hover {
+        color: var(--accent);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-menu {
+          display: none;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+        }
+
+        .hero-title {
+          font-size: 2.5rem;
+        }
+
+        .hero-cta {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .find-recipe-btn {
+          padding: 0.875rem 2rem;
+          font-size: 1.1rem;
+        }
+
+        .hero-stats {
+          gap: 1.5rem;
+        }
+
+        .search-form {
+          flex-direction: column;
+        }
+
+        .search-input {
+          min-width: auto;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
+        .footer-bottom {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <a href="#" class="nav-logo">RecipeHub</a>
+
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="#home" class="nav-link">Home</a></li>
+          <li><a href="#recipes" class="nav-link">Recipes</a></li>
+          <li><a href="#categories" class="nav-link">Categories</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li><a href="#premium" class="nav-cta">Go Premium</a></li>
+        </ul>
+
+        <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <h1 class="hero-title">Discover Amazing Recipes</h1>
+        <p class="hero-subtitle">
+          From comfort food classics to exotic international dishes, find your
+          next favorite meal with our extensive recipe collection
+        </p>
+
+        <div class="hero-cta">
+          <a href="index.html" class="find-recipe-btn"> 🔍 Find Recipe </a>
+          <a href="#about" class="explore-btn"> Explore Features </a>
+          <a href="feedback.html" class="explore-btn"> FeedBack </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number">50K+</span>
+            <span class="stat-label">Recipes</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">2M+</span>
+            <span class="stat-label">Happy Cooks</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">195</span>
+            <span class="stat-label">Countries</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="about">
+      <div class="features-container">
+        <div class="features-header">
+          <h2 class="features-title">Why Choose RecipeHub?</h2>
+          <p class="features-subtitle">
+            We make cooking accessible, fun, and delicious for everyone, from
+            beginners to master chefs
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <span class="feature-icon">🔍</span>
+            <h3 class="feature-title">Smart Search</h3>
+            <p class="feature-description">
+              Find recipes instantly by ingredient, cuisine, dietary
+              preferences, or cooking time
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <span class="feature-icon">📱</span>
+            <h3 class="feature-title">Mobile Friendly</h3>
+            <p class="feature-description">
+              Cook with confidence using our mobile-optimized interface in your
+              kitchen
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <span class="feature-icon">🎲</span>
+            <h3 class="feature-title">Surprise Me</h3>
+            <p class="feature-description">
+              Can't decide what to cook? Let us surprise you with random recipe
+              suggestions
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <span class="feature-icon">🎥</span>
+            <h3 class="feature-title">Video Tutorials</h3>
+            <p class="feature-description">
+              Watch step-by-step video instructions for perfect results every
+              time
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <span class="feature-icon">🌍</span>
+            <h3 class="feature-title">Global Cuisine</h3>
+            <p class="feature-description">
+              Explore authentic recipes from every corner of the world
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <span class="feature-icon">⭐</span>
+            <h3 class="feature-title">Quality Guaranteed</h3>
+            <p class="feature-description">
+              All recipes are tested and rated by our community of passionate
+              home cooks
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enhanced Footer -->
+    <footer class="footer" id="contact">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="company-info">
+              <span class="company-logo">🍽️</span>
+              <div class="company-details">
+                <h3>RecipeHub</h3>
+              </div>
+            </div>
+            <p>
+              Your ultimate destination for discovering and sharing amazing
+              recipes from around the world. Join millions of home cooks who
+              trust RecipeHub for their culinary adventures.
+            </p>
+            <div class="social-links">
+              <a href="#" class="social-link" title="Facebook">📘</a>
+              <a href="#" class="social-link" title="Twitter">🐦</a>
+              <a href="#" class="social-link" title="Instagram">📷</a>
+              <a href="#" class="social-link" title="YouTube">📺</a>
+              <a href="#" class="social-link" title="Pinterest">📌</a>
+            </div>
+          </div>
+
+          <div class="footer-section">
+            <h3>Quick Links</h3>
+            <ul class="footer-links">
+              <li><a href="#home">Home</a></li>
+              <li><a href="#recipes">Browse Recipes</a></li>
+              <li><a href="#categories">Categories</a></li>
+              <li><a href="#about">About Us</a></li>
+              <li><a href="#contact">Contact Us</a></li>
+              <li><a href="#premium">Go Premium</a></li>
+              <li><a href="#privacy">Privacy Policy</a></li>
+              <li><a href="#terms">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
